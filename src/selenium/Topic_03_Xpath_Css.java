@@ -1,5 +1,6 @@
 package selenium;
 
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
@@ -21,6 +22,7 @@ public class Topic_03_Xpath_Css {
 		driver.manage().window().maximize();
 		
 	}
+	
 	
 	@Test
 	public void TC_01_WithEmailPasswordEmpty() throws Exception {
@@ -79,15 +81,38 @@ public class Topic_03_Xpath_Css {
 		driver.findElement(By.xpath("//button[@id='send2']")).click();
 		
 		String invalidLoginMessage = driver.findElement(By.xpath("//li[@class='error-msg']")).getText();
-		AssertJUnit.assertEquals(invalidLoginMessage, "Invali login or password.");
+		AssertJUnit.assertEquals(invalidLoginMessage, "Invalid login or password.");
 		
 		Thread.sleep(3000);
 	}
 	
+	@Test
+	public void TC_05_CreateAnAccount() throws Exception  {
+		driver.get("http://live.guru99.com/");
+		driver.findElement(By.xpath("//div[@class='footer']//a[@title='My Account']")).click();
+		
+		driver.findElement(By.xpath("//a[@title='Create an Account']")).click();
+		
+		driver.findElement(By.xpath("//input[@id='firstname']")).sendKeys("Jimmy");
+		driver.findElement(By.xpath("//input[@id='lastname']")).sendKeys("Nguyen Pham");
+		driver.findElement(By.xpath("//input[@id='email_address']")).sendKeys("automation" + randomNumber() + "@gmail.com");
+		driver.findElement(By.xpath("//input[@id='password']")).sendKeys("123456");
+		driver.findElement(By.xpath("//input[@id='confirmation']")).sendKeys("123456");
+		driver.findElement(By.xpath("//input[@id='is_subscribed']")).click();
+		driver.findElement(By.xpath("//button[@class='button']")).click();
+		
+		Thread.sleep(3000);
+		
+	}
 	
 	@AfterClass
 	public void afterClass() {
 		driver.quit();
+	}
+	
+	public int randomNumber() {
+		Random random = new Random();
+		return random.nextInt(999999);
 	}
 	
 
