@@ -1,5 +1,6 @@
 package selenium;
 
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
@@ -24,7 +25,7 @@ public class Topic_10_JavascriptExcutor {
 	}
 	
 	@Test
-	public void TC_01_CheckUrl() {
+	public void TC_01() {
 		driver.get("http://live.guru99.com");
 		
 		String domainName = (String) executeForBrowser("return document.domain");
@@ -35,10 +36,10 @@ public class Topic_10_JavascriptExcutor {
 		
 		clickToElementByJS("//a[text()='Mobile']");
 		
-		clickToElementByJS("//a[text()='Samsung Galaxy']/parent::h2/following-sibling::div[@class='action']/button");
+		clickToElementByJS("//a[text()='Samsung Galaxy']/parent::h2/following-sibling::div[@class='actions']/button");
 		
 		String shoppingCartInnerText = (String) executeForBrowser("return document.documentElement.innerText");
-		Assert.assertTrue(shoppingCartInnerText.contains("document.documentElement.innerText"));
+		Assert.assertTrue(shoppingCartInnerText.contains("Samsung Galaxy was added to your shopping cart."));
 		
 		clickToElementByJS("//a[text()='Privacy Policy']");
 		
@@ -54,10 +55,68 @@ public class Topic_10_JavascriptExcutor {
 		String demoDomainName = (String) executeForBrowser("return document.domain");
 		Assert.assertEquals(demoDomainName, "demo.guru99.com");
 		
+	}
+  
+	@Test
+	public void TC_02() throws Exception {
+		driver.get("https://www.w3schools.com/tags/tryit.asp?filename=tryhtml_input_disabled");
+		
+		String firstName = "The Vuong";
+		String lastName = "Nguyen Pham";
+		
+		WebElement resultIframe = driver.findElement(By.xpath("//iframe[@id='iframeResult']"));
+		driver.switchTo().frame(resultIframe);
+		
+		// Remove disabled attribute of Lastname textbox
+		removeAttributeInDOM("//input[@name='lname']", "disabled");
+		Thread.sleep(3000);
+		
+		sendkeyToElementByJS("//input[@name='fname']", firstName);
+		sendkeyToElementByJS("//input[@name='lname']", lastName);
+		
+		clickToElementByJS("//input[@type='submit']");
+		
+		Assert.assertTrue(driver.findElement(By.xpath("//div[contains(text(),'" + firstName + "') and contains(text(),'" + lastName + "')]")).isDisplayed());
 		
 		
 	}
-  	
+
+	@Test
+	public void TC_03() throws Exception {
+		driver.get("http://live.guru99.com");
+		
+		String firstName2 = "The Vuong";
+		String lastName2 = "Nguyen Pham";
+		String password = "theVuong17";
+		String email = "automationtesting" + randomNumber() + "@gmail.com";
+		
+		
+		clickToElementByJS("//div[@class='footer-container']//a[text()='My Account']");
+		
+		clickToElementByJS("//a[@class='button']");
+		
+		sendkeyToElementByJS("//input[@id='firstname']", firstName2);
+		sendkeyToElementByJS("//input[@id='lastname']", lastName2);
+		sendkeyToElementByJS("//input[@id='email_address']", email);
+		sendkeyToElementByJS("//input[@id='password']", password);
+		sendkeyToElementByJS("//input[@id='confirmation']", password);
+		
+		clickToElementByJS("//input[@id='is_subscribed']");
+		
+		clickToElementByJS("//button[@title='Register']");
+		
+		String registerSuccessfulText = (String) executeForBrowser("return document.documentElement.innerText");
+		Assert.assertTrue(registerSuccessfulText.contains("Thank you for registering with Main Website Store."));
+		
+		clickToElementByJS("//a[@class='skip-link skip-account']");
+		
+		clickToElementByJS("//a[text()='Log Out']");
+		
+		Assert.assertTrue(driver.findElement(By.xpath("//img[contains(@src,'logo.png')]")).isDisplayed());
+		
+		Thread.sleep(3000);
+	}
+	
 	@AfterClass
 	public void afterClass() {
 		driver.quit();
@@ -101,5 +160,10 @@ public class Topic_10_JavascriptExcutor {
             JavascriptExecutor js = (JavascriptExecutor) driver;
             return js.executeScript("window.location = '" + url + "'");
     }
+    
+    public int randomNumber() {
+		Random random = new Random();
+		return random.nextInt(999999);
+	}
 
 }
