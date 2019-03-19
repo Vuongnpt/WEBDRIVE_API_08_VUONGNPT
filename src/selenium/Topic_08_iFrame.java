@@ -1,6 +1,7 @@
 package selenium;
 
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.Assert;
@@ -65,13 +66,27 @@ public class Topic_08_iFrame {
 		System.out.println("Flipper Banner Image = " + flipperBannerImage.size());
 		Assert.assertEquals(flipperBannerImage.size(), 8);
 		
+		// Check 8 images display
+		for (int i = 0; i< flipperBannerImage.size(); i++) {
+			System.out.println("Check image thu - " + i);
+			Assert.assertTrue(flipperBannerImage.get(i).isDisplayed());
+		}
+		
+		// for each
+		for (WebElement bannerImage : flipperBannerImage) {
+			Assert.assertTrue(bannerImage.isDisplayed());
+		}
 
 	}
-  	
+	
 	@AfterClass
 	public void afterClass() {
 		driver.quit();
+		
 	}
 	
-
 }
+	
+	
+	
+	
