@@ -6,7 +6,7 @@ import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.testng.AssertJUnit;
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -24,7 +24,7 @@ public class Topic_03_Xpath_Css {
 	}
 	
 	
-	@Test
+	/*@Test
 	public void TC_01_WithEmailPasswordEmpty() throws Exception {
 		driver.get("http://live.guru99.com/");
 		driver.findElement(By.xpath("//div[@class='footer']//a[@title='My Account']")).click();
@@ -85,13 +85,15 @@ public class Topic_03_Xpath_Css {
 		
 		Thread.sleep(3000);
 	}
-	
+	*/
 	@Test
 	public void TC_05_CreateAnAccount() throws Exception  {
 		driver.get("http://live.guru99.com/");
 		driver.findElement(By.xpath("//div[@class='footer']//a[@title='My Account']")).click();
 		
 		driver.findElement(By.xpath("//a[@title='Create an Account']")).click();
+		
+		// Create account
 		
 		driver.findElement(By.xpath("//input[@id='firstname']")).sendKeys("Jimmy");
 		driver.findElement(By.xpath("//input[@id='lastname']")).sendKeys("Nguyen Pham");
@@ -101,8 +103,24 @@ public class Topic_03_Xpath_Css {
 		driver.findElement(By.xpath("//input[@id='is_subscribed']")).click();
 		driver.findElement(By.xpath("//button[@class='button']")).click();
 		
-		Thread.sleep(3000);
+		// Verify register successful
 		
+		/*String registerSuccess = driver.findElement(By.xpath("//*[@id='top']/body/div[1]/div/div[2]/div/div[2]/div/div/ul/li/ul/li/span")).getText();
+		AssertJUnit.assertEquals(registerSuccess, "Thank you for registering with Main Website Store.");
+		
+		Thread.sleep(3000);
+		*/
+		// Logout
+		
+		driver.findElement(By.xpath("//div[@class='account-cart-wrapper']//a/div[@class='skip-link skip-account skip-active']//span[@class='icon']")).click();
+		driver.findElement(By.xpath("//div[@id='header-account']//a[@title='Log Out']")).click();
+		
+		Thread.sleep(5000);
+		
+		// Check Homepage
+		
+		String homePageTitle = driver.getTitle();
+		Assert.assertEquals(homePageTitle, "Home page");
 	}
 	
 	@AfterClass

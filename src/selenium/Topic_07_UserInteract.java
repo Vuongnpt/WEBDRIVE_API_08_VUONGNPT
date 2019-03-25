@@ -1,13 +1,15 @@
 package selenium;
 
-import java.util.List;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.Charset;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.Assert;
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -17,6 +19,10 @@ import org.openqa.selenium.interactions.Actions;
 public class Topic_07_UserInteract {
 	WebDriver driver;
 	Actions action, moveItem;
+	
+	String workingDirectory = System.getProperty("user.dir");
+	String jsFilePath = workingDirectory + "\\helper\\drag_and_drop_helper.js";
+	String jQueryFilePath = workingDirectory + "\\helper\\jquery_load_helper.js";
 	
 	@BeforeClass
 	public void beforeClass() {
@@ -110,17 +116,55 @@ public class Topic_07_UserInteract {
 	public void TC_06() throws Exception {
 		driver.get("https://html5demos.com/drag/#");
 		
+		String oneCss = "#one";
+		String targetCss = "#bin";
+		
+		//String jQueryLoader = readFile(jQueryFilePath);
+		String java_script = readFile(jsFilePath);
+		
+		JavascriptExecutor je = (JavascriptExecutor) driver;
+		// je.executeScript(jQueryLoader);
+		
+		java_script = java_script + "$(\"" + oneCss + "\").simulateDragDrop({ droptarget: \"" + targetCss + "\"});";
+		je.executeScript(java_script);
+		Thread.sleep(3000);
+		
+}
+	
+	
+	@Test
+	public void TC_07() throws Exception {
+		driver.get("https://html5demos.com/drag/#");
 		
 		
 		
 	}
+	
 	
 	@AfterClass
 	public void afterClass() {
 		driver.quit();
 		
 	}
+
 	
+	
+	public String readFile(String file) throws IOException {
+		Charset cs = Charset.forName("UTF-8");
+		FileInputStream stream = new FileInputStream(file);
+		try {
+			Reader reader = new BufferedReader(new InputStreamReader(stream, cs));
+			StringBuilder builder = new StringBuilder();
+			char[] buffer = new char[8192];
+			int read;
+			while ((read = reader.read(buffer, 0, buffer.length)) >0) {
+				builder.append(buffer, 0 , read);
+			}
+			return builder.toString();
+		} finally {
+			stream.close();
+		}
+	}
 }
 	
 	
